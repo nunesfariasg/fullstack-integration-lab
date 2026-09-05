@@ -3,8 +3,10 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 public class HttpServer66 {
 
@@ -16,7 +18,8 @@ public class HttpServer66 {
                 0
         );
 
-        // Define the route and what it will do
+
+        // Route to GET requests
         server.createContext("/api/helloworld", new HttpHandler() {
             @Override
             public void handle(HttpExchange httpExchange) throws IOException {
@@ -31,6 +34,38 @@ public class HttpServer66 {
                 OutputStream outputStream = httpExchange.getResponseBody();
                 outputStream.write(response.getBytes());
                 outputStream.close();
+            }
+        });
+
+        // Route to POST requests
+        server.createContext("/api/sand", new HttpHandler() {
+            @Override
+            public void handle(HttpExchange httpExchange) throws IOException {
+
+                // Checks if method sanded is POST
+                if ("POST".equalsIgnoreCase(httpExchange.getRequestMethod())) {
+
+                    // Reads body sanded for the client
+                    InputStream inputStream = httpExchange.getRequestBody();
+                    String bodyReceived = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                    System.out.println("Service received the data: " + bodyReceived);
+
+                    // Create a confirmation response
+                    String response = "Server processed the POST with success!";
+
+                    // Sands headers with status and message size
+                    httpExchange.sendResponseHeaders(200,response.getBytes().length);
+
+                    // Sands the response message
+                    OutputStream outputStream = httpExchange.getResponseBody();
+                    outputStream.write(response.getBytes(StandardCharsets.UTF_8));
+                    outputStream.close();
+
+                }
+                else {
+                    // If it is not a POST request, returns a 405 error
+                    httpExchange.sendResponseHeaders(405,-1);
+                }
             }
         });
 
