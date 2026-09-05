@@ -3,7 +3,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class HttpClient66 {
+public class HttpClient6 {
     public static void main(String[] args) {
 
 
